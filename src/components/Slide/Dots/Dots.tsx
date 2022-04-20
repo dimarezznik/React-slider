@@ -1,18 +1,25 @@
-import React from 'react'
+import React, { FC } from "react";
 import styled from "styled-components";
 
-
-
-const Dots = ({slideIndex, index, tapDot}) => {
-  return (
-      <>
-      {slideIndex === index + 1 ? <ActiveDot ></ActiveDot> : <Dot onClick={() => tapDot(index + 1)}></Dot>}
-    </>
-  )
+interface DotsType {
+  slideIndex: number;
+  index: number;
+  tapDot: (arg: number) => void;
 }
 
-export default Dots
+const Dots: FC<DotsType> = ({ slideIndex, index, tapDot }) => {
+  return (
+    <>
+      {slideIndex === index + 1 ? (
+        <ActiveDot></ActiveDot>
+      ) : (
+        <Dot onClick={() => tapDot(index + 1)}></Dot>
+      )}
+    </>
+  );
+};
 
+export default Dots;
 
 const Dot = styled.div`
   width: 20px;
