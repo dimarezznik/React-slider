@@ -1,4 +1,11 @@
-import React, { FC, useCallback, useEffect, useRef, useState } from "react";
+import React, {
+  FC,
+  useCallback,
+  useEffect,
+  useLayoutEffect,
+  useRef,
+  useState,
+} from "react";
 import styled from "styled-components";
 import { Slide } from "./../mockSlides";
 import IMGRight from "../assets/right-arrow.svg";
@@ -49,7 +56,7 @@ const Slider: FC<Sliders> = ({
     clearInterval(autoRun.current);
   }, []);
 
-  useEffect(() => {
+  useLayoutEffect(() => {
     if (auto && stopMouseHover) {
       startInterval();
     }
