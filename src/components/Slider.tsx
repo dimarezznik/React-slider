@@ -1,4 +1,4 @@
-import React, { FC, useCallback, useEffect, useState } from "react";
+import React, { FC, useCallback, useEffect, useRef, useState } from "react";
 import styled from "styled-components";
 import { Slide } from "./../mockSlides";
 import IMGRight from "../assets/right-arrow.svg";
@@ -25,10 +25,11 @@ const Slider: FC<Sliders> = ({
   stopMouseHover,
   delay,
 }) => {
-  const [autoRun, setAuto] = useState<boolean>(auto);
   const [slideIndex, setSlideIndex] = useState<number>(1);
+  const INTERVAL = 5000;
+  const autoRun = useRef<any>(null);
 
-  const nextSlide = () => {
+  const nextSlide = useCallback(() => {
     if (slideIndex === slides.length && loop) {
       setSlideIndex(1);
     } else if (slideIndex === slides.length && !loop) {
@@ -36,44 +37,41 @@ const Slider: FC<Sliders> = ({
     } else if (slideIndex < slides.length) {
       setSlideIndex(slideIndex + 1);
     }
-  };
+  }, [loop, slideIndex, slides.length]);
+
+  const startInterval = useCallback(() => {
+    autoRun.current = setInterval(() => {
+      nextSlide();
+    }, delay * 1000 || INTERVAL);
+  }, [delay, nextSlide]);
+
+  const stopInterval = useCallback(() => {
+    clearInterval(autoRun.current);
+  }, []);
 
   useEffect(() => {
-    let interval: NodeJS.Timeout;
-    if (autoRun) {
-      interval = setTimeout(() => {
-        nextSlide();
-      }, delay * 1000 || 5000);
+    if (auto && stopMouseHover) {
+      startInterval();
     }
-    return () => clearTimeout(interval);
-  }, [autoRun, slideIndex]);
 
-  const prevSlide = () => {
+    return stopInterval;
+  }, [
+    auto,
+    delay,
+    nextSlide,
+    startInterval,
+    slideIndex,
+    stopInterval,
+    stopMouseHover,
+  ]);
+
+  const prevSlide = useCallback(() => {
     if (slideIndex === 1 && loop) {
       setSlideIndex(slides.length);
     } else if (slideIndex > 1 || (slideIndex === slides.length && !loop)) {
       setSlideIndex(slideIndex - 1);
     }
-  };
-
-  const stopMove = useCallback(() => {
-    if (autoRun === true && stopMouseHover === auto) {
-      setAuto(false);
-    }
-  }, [autoRun]);
-
-  const startMove = useCallback(() => {
-    if (autoRun === false && stopMouseHover === auto) {
-      setAuto(true);
-    }
-  }, [autoRun]);
-
-  const tapDot = useCallback(
-    (index: React.SetStateAction<number>) => {
-      setSlideIndex(index);
-    },
-    [slideIndex]
-  );
+  }, [loop, slideIndex, slides.length]);
 
   return (
     <section>
@@ -94,8 +92,8 @@ const Slider: FC<Sliders> = ({
               id={slide.id}
               img={slide.img}
               text={slide.text}
-              stopMove={stopMove}
-              startMove={startMove}
+              stopInterval={stopInterval}
+              startInterval={startInterval}
             />
           );
         })}
@@ -107,7 +105,7 @@ const Slider: FC<Sliders> = ({
                   key={item.id}
                   slideIndex={slideIndex}
                   index={index}
-                  tapDot={tapDot}
+                  setSlideIndex={setSlideIndex}
                 />
               ))}
             </DotsContainer>

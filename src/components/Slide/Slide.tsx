@@ -7,8 +7,8 @@ type SlideType = {
   text: string;
   index: number;
   slideIndex: number;
-  stopMove: () => any;
-  startMove: () => any;
+  stopInterval: () => void;
+  startInterval: () => void;
 };
 
 const MapSlide: FC<SlideType> = ({
@@ -17,19 +17,22 @@ const MapSlide: FC<SlideType> = ({
   text,
   index,
   slideIndex,
-  stopMove,
-  startMove,
+  stopInterval,
+  startInterval,
 }) => {
   return (
     <>
       {slideIndex !== index + 1 ? (
-        <SomeSlide onMouseEnter={stopMove} onMouseLeave={startMove}>
+        <SomeSlide onMouseEnter={stopInterval} onMouseLeave={startInterval}>
           <Amount>{id} / 4</Amount>
           <Image src={img} alt="some pic" />
           <Text>{text}</Text>
         </SomeSlide>
       ) : (
-        <ActiveSomeSlide onMouseEnter={stopMove} onMouseLeave={startMove}>
+        <ActiveSomeSlide
+          onMouseEnter={stopInterval}
+          onMouseLeave={startInterval}
+        >
           <Amount>{id} / 4</Amount>
           <Image src={img} alt="some pic" />
           <Text>{text}</Text>

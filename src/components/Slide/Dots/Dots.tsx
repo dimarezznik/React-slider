@@ -4,16 +4,16 @@ import styled from "styled-components";
 interface DotsType {
   slideIndex: number;
   index: number;
-  tapDot: (arg: number) => void;
+  setSlideIndex: (arg: number) => void;
 }
 
-const Dots: FC<DotsType> = ({ slideIndex, index, tapDot }) => {
+const Dots: FC<DotsType> = ({ slideIndex, index, setSlideIndex }) => {
   return (
     <>
       {slideIndex === index + 1 ? (
         <ActiveDot></ActiveDot>
       ) : (
-        <Dot onClick={() => tapDot(index + 1)}></Dot>
+        <Dot onClick={() => setSlideIndex(index + 1)}></Dot>
       )}
     </>
   );
