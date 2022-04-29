@@ -10,7 +10,7 @@ function App() {
       pags={true}
       auto={true}
       stopMouseHover={true}
-      delay={1}
+      delay={3}
     />
   );
 }

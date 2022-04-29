@@ -7,7 +7,7 @@ import React, {
   useState,
 } from "react";
 import styled from "styled-components";
-import { Slide } from "./../mockSlides";
+import { Slide } from "../mockSlides";
 import IMGRight from "../assets/right-arrow.svg";
 import IMGLeft from "../assets/left-arrow.svg";
 import MapSlide from "./Slide/Slide";
@@ -23,6 +23,8 @@ export interface Sliders {
   delay: number;
 }
 
+const DEFAULT_INTERVAL = 5000;
+
 const Slider: FC<Sliders> = ({
   slides,
   loop,
@@ -33,7 +35,6 @@ const Slider: FC<Sliders> = ({
   delay,
 }) => {
   const [slideIndex, setSlideIndex] = useState<number>(1);
-  const INTERVAL = 5000;
   const autoRun = useRef<any>(null);
 
   const nextSlide = useCallback(() => {
@@ -49,7 +50,7 @@ const Slider: FC<Sliders> = ({
   const startInterval = useCallback(() => {
     autoRun.current = setInterval(() => {
       nextSlide();
-    }, delay * 1000 || INTERVAL);
+    }, delay * 1000 || DEFAULT_INTERVAL);
   }, [delay, nextSlide]);
 
   const stopInterval = useCallback(() => {
